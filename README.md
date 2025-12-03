@@ -1,6 +1,6 @@
 # MaixCAM-Pro Small Mammal Detection Models  
 ### Supervised Machine Learning Models for Squirrel Detection Using Heterogeneous, Homogeneous, and Mixed Backgrounds  
-*(Associated manuscript: see reference in repository)*  
+
 
 
 ---
