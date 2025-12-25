@@ -61,14 +61,7 @@ Model C is **recommended** for deployment.
 
 ---
 
-## Python Scripts
 
-Two Python utilities are provided:
-
-- **evaluation_metrics.py**  
-  - Computes Precision, Recall, F1 Score, mAP (if prediction logs are available)
-- **confusion_matrix_plot.py**  
-  - Generates confusion matrices for the three models
 
 ## Key Files Used in the Study
 
