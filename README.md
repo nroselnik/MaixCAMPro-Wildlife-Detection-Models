@@ -54,9 +54,6 @@ Two Python utilities are provided:
 - **confusion_matrix_plot.py**  
   - Generates confusion matrices for the three models
 
-Example usage:
 
-```bash
-python evaluation_metrics.py --pred predictions.csv --gt groundtruth.csv
 
 
