@@ -1,0 +1,54 @@
+from maix import camera, display, image, nn, app
+import time, os
+
+# Initialize YOLOv5 detector
+model_path = "/root/models/maixhub/196894/model_196894.mud" #remember to use the folder path name
+detector = nn.YOLOv5(model=model_path, dual_buff=True)
+
+# Camera and display initialization
+cam = camera.Camera(detector.input_width(), detector.input_height(), detector.input_format())
+disp = display.Display()
+
+# Directory setup, you can add or rename, remember to put /
+save_dir = "/sdcard/detections/mixed"
+if not os.path.exists(save_dir):
+    os.makedirs(save_dir)
+
+# Define classes of interest, depends on how many classes, if any more just add , "object name"
+TARGET_CLASSES = ["rat"]
+
+# Log file setup
+log_file_path = f"{save_dir}/detection_log.csv"
+if not os.path.exists(log_file_path):
+    with open(log_file_path, "w") as logfile:
+        logfile.write("Timestamp,Class,Confidence\n")
+
+# Main loop
+while not app.need_exit():
+    img = cam.read()
+    objs = detector.detect(img, conf_th=0.5, iou_th=0.45)
+
+    for obj in objs:
+        label = detector.labels[obj.class_id]
+        x, y, w, h = obj.x, obj.y, obj.w, obj.h
+
+        # Draw bounding box and label
+        img.draw_rect(x, y, w, h, color=image.COLOR_RED)
+        msg = f'{label}: {obj.score:.2f}'
+        img.draw_string(x, y - 10, msg, color=image.COLOR_RED)
+
+        # Save image and log if rat or squirrel detected
+        if label in TARGET_CLASSES:
+            current_time = time.localtime()
+            timestamp = time.strftime("%Y%m%d_%H%M%S", current_time)
+
+            # Save image
+            filename = f"{save_dir}/{label}_{timestamp}.jpg"
+            img.save(filename)
+
+            # Append detection to log file
+            with open(log_file_path, "a") as logfile:
+                date_time = time.strftime("%Y-%m-%d %H:%M:%S", current_time)
+                logfile.write(f"{date_time},{label},{obj.score:.2f}\n")
+
+    disp.show(img)
